@@ -1,0 +1,35 @@
+---
+
+!include parent.yml
+
+---
+
+age:
+  type: int
+  help: |
+    How old are you?
+
+parent_template_url:
+  type: str
+  when: false
+  default: "https://github.com/francesco086/copier-inheritance-via-task-and-migration-demo-parent.git"
+
+parent_template_version:
+  type: str
+  when: false
+  default: "v1.0.0"
+
+parent_excluded_files_cmd:
+  type: str
+  when: false
+  default: "-x 'user.md'"
+
+parent_answers_cmd:
+  type: str
+  when: false
+  default: "-d name='{{name}}' -d favorite_animal='{{favorite_animal}}'"
+
+_tasks:
+  - "echo 'The copier operation is {{ _copier_operation }}'"
+  - command: "copier copy -r {{parent_template_version}} -a .copier-answers-parent.yml {{parent_answers_cmd}} {{parent_excluded_files_cmd}} {{parent_template_url}} ."
+    when: "{{ _copier_operation == 'copy' }}"

@@ -1,0 +1,13 @@
+name:
+  type: str
+  help: |
+    What is your name?
+
+favorite_animal:
+  type: str
+  help: |
+    What is your favorite animal?
+
+_subdirectory: template
+
+_min_copier_version: "9.8.0"
