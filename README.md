@@ -1,5 +1,15 @@
 # Copier template inheritance via task and migrations demo: Child Template
 
+## v1.1.0
+
+Questions: same as v1.0.0
+
+### Files
+
+Same as v1.0.0, plus:
+
+- `qr-code`
+
 ## v1.0.0
 
 Questions: same as parent template v1.0.0, plus age.
