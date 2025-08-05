@@ -1,5 +1,61 @@
 # Copier template inheritance via task and migrations demo: Child Template
 
+Parent template can be found [here](https://github.com/francesco086/copier-inheritance-via-task-and-migration-demo-parent).
+
+This child template has 3 versions: `v1.0.0`, `v1.1.0`, and `v2.0.0`.
+
+User can experiment using `copier copy` and `copier update` commands on all these versions, and it should work.
+
+I tried these two experiments, and they worked as expected:
+
+1. - `copier copy -r v1.0.0 ...`
+   - `copier update -r v1.1.0 ...`
+   - `copier update -r v2.0.0 ...`
+2. - `copier copy -r v2.0.0 ...`
+
+## v2.0.0 (update from parent v1.0.0 to v2.0.0)
+
+Questions: same as parent template v2.0.0, plus age.
+
+### Files
+
+Same as v1.0.0.
+
+### How inheritance is implemented
+
+Parent target version is changed in `copier.yml`:
+```
+parent_template_version:
+  type: str
+  when: false
+  default: "v2.0.0"
+```
+
+`parent.yml` needs to be updated to the content of v2.0.0, which includes the new question `favorite_color`.
+This requires to change:
+```
+parent_answers_cmd:
+  type: str
+  when: false
+  default: "-d name='{{name}}' -d favorite_animal='{{favorite_animal}}' -d favorite_color='{{favorite_color}}'"
+```
+in `copier.yml`.
+
+Added a migration to update the parent template:
+```
+_migrations:
+  - version: "v2.0.0"
+    command: "git stash && copier update -r {{parent_template_version}} -a .copier-answers-parent.yml {{parent_answers_cmd}} {{parent_excluded_files_cmd}} && git stash pop"
+```
+
+Notice the `git stash` commands. These are necessary to avoid the error
+```
+> Running task 1 of 1: copier update -r v2.0.0 -a .copier-answers-parent.yml -d name='NAME' -d favorite_animal='ANIMAL' -x 'user.md'
+Destination repository is dirty; cannot continue. Please commit or stash your local changes and retry.
+Task "copier update -r v2.0.0 -a .copier-answers-parent.yml -d name='NAME' -d favorite_animal='ANIMAL' -x 'user.md'" returned non-zero exit status 1.
+```
+If `copier` would support natively inheritance, this could be avoided.
+
 ## v1.1.0
 
 Questions: same as v1.0.0

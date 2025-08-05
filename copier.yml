@@ -17,7 +17,7 @@ parent_template_url:
 parent_template_version:
   type: str
   when: false
-  default: "v1.0.0"
+  default: "v2.0.0"
 
 parent_excluded_files_cmd:
   type: str
@@ -27,9 +27,13 @@ parent_excluded_files_cmd:
 parent_answers_cmd:
   type: str
   when: false
-  default: "-d name='{{name}}' -d favorite_animal='{{favorite_animal}}'"
+  default: "-d name='{{name}}' -d favorite_animal='{{favorite_animal}}' -d favorite_color='{{favorite_color}}'"
 
 _tasks:
   - "echo 'The copier operation is {{ _copier_operation }}'"
   - command: "copier copy -r {{parent_template_version}} -a .copier-answers-parent.yml {{parent_answers_cmd}} {{parent_excluded_files_cmd}} {{parent_template_url}} ."
     when: "{{ _copier_operation == 'copy' }}"
+
+_migrations:
+  - version: "v2.0.0"
+    command: "git stash && copier update -r {{parent_template_version}} -a .copier-answers-parent.yml {{parent_answers_cmd}} {{parent_excluded_files_cmd}} && git stash pop"

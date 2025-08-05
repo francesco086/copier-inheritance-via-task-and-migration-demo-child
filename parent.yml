@@ -8,6 +8,11 @@ favorite_animal:
   help: |
     What is your favorite animal?
 
+favorite_color:
+  type: str
+  help: |
+    What is your favorite color?
+
 _subdirectory: template
 
 _min_copier_version: "9.8.0"
